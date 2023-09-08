@@ -1,5 +1,7 @@
 # Cmake + Conan project template
 
+**Now [TODO](TODO.md) is the most important thing in this repo**
+
 ### Do this first! Init dev environment
 Install conan, cmake and ninja and dependencies from apt  
 `tools/dev-init.sh`
