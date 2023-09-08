@@ -1,0 +1,23 @@
+Checks: '-*,
+        clang-analyzer-*,
+        -clang-analyzer-cplusplus.NewDeleteLeaks,
+        concurrency-*,
+        cppcoreguidelines-*,
+        -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+        -cppcoreguidelines-non-private-member-variables-in-classes,
+        google-*
+        misc-*,
+        modernize-*,
+        -modernize-use-nodiscard,
+        -modernize-use-trailing-return-type,
+        performance-*,
+        readability-*,
+        -readability-named-parameter,
+        -readability-identifier-length'
+CheckOptions:
+      - key:     cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+        value:   '1'
+      - key:     cppcoreguidelines-special-member-functions.AllowMissingMoveFunctionsWhenCopyIsDeleted
+        value:   '1'
+FormatStyle: 'file'
+InheritParentConfig: true

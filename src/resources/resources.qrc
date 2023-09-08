@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fonts/RobotoMono-Medium.ttf</file>
+        <file>icons/lonely_face.png</file>
+        <file>icons/lonely_face.ico</file>
+        <file>qml/Constants.js</file>
+        <file>qml/main.qml</file>
+    </qresource>
+</RCC>

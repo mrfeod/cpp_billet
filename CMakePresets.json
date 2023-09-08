@@ -1,0 +1,103 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "wsl-debug",
+            "displayName": "Visual Studio WSL Debug",
+            "description": "Target the Windows Subsystem for Linux (WSL) or a remote Linux system.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "installDir": "${sourceDir}/build/install",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "environment": {
+                "DISPLAY": "192.168.64.1:0.0",
+                "PULSE_SERVER": "tcp:192.168.64.1",
+                "LIBGL_ALWAYS_INDIRECT": "0"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
+            "name": "linux-gcc-release",
+            "displayName": "Release GCC 9.3.0 x86_64-linux-gnu",
+            "description": "Using compilers: C = /usr/bin/x86_64-linux-gnu-gcc-9, CXX = /usr/bin/x86_64-linux-gnu-g++-9",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install",
+                "CMAKE_C_COMPILER": "/usr/bin/x86_64-linux-gnu-gcc-9",
+                "CMAKE_CXX_COMPILER": "/usr/bin/x86_64-linux-gnu-g++-9",
+                "QT_DIR": ""
+            }
+        },
+        {
+            "name": "linux-gcc-ext-qt-release",
+            "inherits": "linux-gcc-release",
+            "displayName": "Release GCC 9.3.0 x86_64-linux-gnu external Qt",
+            "cacheVariables": {
+                "QT_DIR": "/opt/qt5.12"
+            }
+        },
+        {
+            "name": "linux-gcc-debug",
+            "inherits": "linux-gcc-release",
+            "displayName": "Debug GCC 9.3.0 x86_64-linux-gnu",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "linux-gcc-ext-qt-debug",
+            "inherits": "linux-gcc-ext-qt-release",
+            "displayName": "Debug GCC 9.3.0 x86_64-linux-gnu external Qt",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "build",
+            "configurePreset": "linux-gcc-release"
+        },
+        {
+            "name": "build-release",
+            "inherits": "build",
+            "cleanFirst": true
+        },
+        {
+            "name": "build-debug",
+            "inherits": "build",
+            "configurePreset": "linux-gcc-debug"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "test-release",
+            "configurePreset": "linux-gcc-release",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": false,
+                "scheduleRandom": true
+            }
+        },
+        {
+            "name": "test-debug",
+            "inherits": "test-release",
+            "configurePreset": "linux-gcc-debug"
+        }
+    ]
+}

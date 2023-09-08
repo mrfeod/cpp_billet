@@ -1,0 +1,33 @@
+#pragma once
+
+#include <QObject>
+#include <QSharedMemory>
+#include <QSystemSemaphore>
+
+namespace sloth {
+
+class RunGuard
+{
+public:
+    explicit RunGuard(const QString& key);
+    ~RunGuard();
+
+    RunGuard(RunGuard&&) = delete;
+    RunGuard& operator=(RunGuard&&) = delete;
+
+    bool isAnotherRunning();
+    bool tryToRun();
+    void release();
+
+private:
+    const QString key;
+    const QString memLockKey;
+    const QString sharedmemKey;
+
+    QSharedMemory sharedMem;
+    QSystemSemaphore memLock;
+
+    Q_DISABLE_COPY(RunGuard)
+};
+
+}  // namespace sloth

@@ -1,0 +1,36 @@
+Language: Cpp
+BasedOnStyle: Google
+AccessModifierOffset: -4
+IndentWidth: 4
+BreakConstructorInitializersBeforeComma: true
+ColumnLimit: 120
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass:      true
+  AfterControlStatement: false
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterObjCDeclaration: true
+  AfterStruct:     true
+  AfterUnion:      true
+  BeforeCatch:     true
+  BeforeElse:      false
+  IndentBraces:    false
+  AfterNamespace:  false
+  SplitEmptyFunction: false
+DerivePointerAlignment: false
+Standard: c++17
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveMacros: AcrossEmptyLines
+AlignTrailingComments: true
+AlignEscapedNewlines: Right
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeComma
+CompactNamespaces: true
+ReflowComments: false
+SortIncludes: false
+IndentCaseLabels: false
+#EmptyLineBeforeAccessModifierStyle: true
