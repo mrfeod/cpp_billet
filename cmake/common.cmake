@@ -101,7 +101,9 @@ else()
 endif()
 
 set(CONAN_fmt fmt/10.1.0)
-set(CONAN_OPTIONS_fmt fmt:fPIC=True)
+if (UNIX)
+    set(CONAN_OPTIONS_fmt fmt:fPIC=True)
+endif()
 
 set(CONAN_spdlog spdlog/1.12.0)
 set(CONAN_OPTIONS_spdlog spdlog:header_only=True)
