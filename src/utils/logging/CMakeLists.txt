@@ -6,7 +6,6 @@ add_library(${PROJECT_NAME}
 add_library(sloth::logging ALIAS ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-        sloth::logging
         fmt::fmt
         spdlog::spdlog
     PRIVATE

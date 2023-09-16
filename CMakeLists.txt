@@ -1,10 +1,37 @@
-cmake_minimum_required(VERSION 3.5)
+# cmake_minimum_required(VERSION 3.9)
+# project(FormatOutput CXX)
+
+# list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+# list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
+
+# add_definitions("-std=c++17")
+
+# include(cmake/conan.cmake)
+
+# conan_cmake_configure(REQUIRES fmt/10.1.0
+#                       GENERATORS cmake_find_package)
+
+# conan_cmake_autodetect(settings)
+
+# conan_cmake_install(PATH_OR_REFERENCE .
+#                     BUILD missing
+#                     REMOTE conancenter
+#                     SETTINGS ${settings})
+
+# find_package(fmt)
+
+# add_executable(main src/main.cpp)
+# target_link_libraries(main fmt::fmt)
+
+cmake_minimum_required(VERSION 3.20)
 project(cmake_project VERSION 1.0.0)
 
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     add_compile_definitions(SLOTH_DEBUG)
     message(STATUS "SLOTH Debug build")
 endif()
+    add_compile_definitions(SLOTH_DEBUG)
+
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
 set(CMAKE_INSTALL_RPATH "../lib")
@@ -13,6 +40,8 @@ message(STATUS "Install directory: ${CMAKE_INSTALL_PREFIX}")
 include(cmake/common.cmake)
 
 conan_cmake_run(
+    PROFILE
+        default
     REQUIRES
         ${CONAN_Qt}
         ${CONAN_fmt}
@@ -24,18 +53,43 @@ conan_cmake_run(
     UPDATE
     OPTIONS
         ${CONAN_OPTIONS_Qt}
-        ${CONAN_OPTIONS_udev}
         ${CONAN_OPTIONS_fmt}
         ${CONAN_OPTIONS_spdlog}
     BUILD
         missing
     GENERATORS
+        cmake
         cmake_paths
         cmake_find_package
     )
 
+
+# conan_cmake_configure(
+#     REQUIRES 
+#         ${CONAN_Qt}
+#         ${CONAN_fmt}
+#         ${CONAN_spdlog}
+#         ${CONAN_doctest}
+#         ${CONAN_magic_enum}
+#     OPTIONS
+#         ${CONAN_OPTIONS_Qt}
+#         ${CONAN_OPTIONS_udev}
+#         ${CONAN_OPTIONS_fmt}
+#         ${CONAN_OPTIONS_spdlog}
+#     GENERATORS
+#         cmake_paths
+#         cmake_find_package
+#     )
+
+# conan_cmake_autodetect(settings)
+
+# conan_cmake_install(PATH_OR_REFERENCE .
+#                     BUILD missing
+#                     REMOTE conancenter
+#                     SETTINGS ${settings})
+
 # Qt
-set(QT_COMPONENTS "Core;Gui;Network;Concurrent;Widgets;Qml;Quick;QuickControls2;SerialPort;Sql;PrintSupport")
+set(QT_COMPONENTS "Core;Gui;Network;Concurrent;Widgets;Qml;Quick;QuickControls2;Sql;PrintSupport")
 find_package(${QT} COMPONENTS ${QT_COMPONENTS} REQUIRED)
 if(USE_EXTERNAL_QT)
     set(QML_IMPORT_PATH "${QT_DIR}/qml")
@@ -65,8 +119,6 @@ include_directories(
     tests
     )
 
-link_libraries(stdc++fs)
-
 # Internal libraries
 add_subdirectory(3rdparty)
 add_subdirectory(src/resources)
@@ -79,14 +131,22 @@ add_subdirectory(src/app)
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
+        Qt5::Qt5
         sloth::resources
         sloth::app
     )
-target_link_options(${PROJECT_NAME}
-    PRIVATE
-        -static-libgcc
-        -static-libstdc++
-    )
+if(WIN32)
+    target_link_options(${PROJECT_NAME}
+        PRIVATE
+            -static-libstdc++
+        )
+else()
+    target_link_options(${PROJECT_NAME}
+        PRIVATE
+            -static-libgcc
+            -static-libstdc++
+        )
+endif()
 
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     set(${PROJECT_NAME}_DEBUG_DEFINES

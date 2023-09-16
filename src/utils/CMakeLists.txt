@@ -6,7 +6,7 @@ add_library(${PROJECT_NAME}
 
 add_library(sloth::utils ALIAS ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC
-        sloth::utils
-    )
+# target_link_libraries(${PROJECT_NAME}
+#     PUBLIC
+#         sloth::utils
+#     )

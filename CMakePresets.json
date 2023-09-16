@@ -50,20 +50,20 @@
         },
         {
             "name": "windows-msvc-release",
-            "displayName": "Visual Studio Community 2022 Release - amd64",
-            "description": "Using compilers for Visual Studio 17 2022 (x64 architecture)",
+            "displayName": "msvc release - amd64",
+            "description": "Using msvc 19 (x64 architecture)",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/install",
-                "CMAKE_C_COMPILER": "cl.exe",
-                "CMAKE_CXX_COMPILER": "cl.exe"
+                "QT_DIR": "../SDK/qt-5.15.3-dynamic-msvc2019-x86_64"
             }
         },
         {
             "name": "windows-msvc-debug",
             "inherits": "windows-msvc-release",
-            "displayName": "Visual Studio Community 2022 Debug - amd64",
+            "displayName": "msvc debug - amd64",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }

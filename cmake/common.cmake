@@ -1,4 +1,9 @@
 # Common options
+if(WIN32)
+    execute_process(COMMAND where cmake OUTPUT_VARIABLE CMAKE_EXECUTABLE_PATH)
+    message(NOTICE "Using cmake from ${CMAKE_EXECUTABLE_PATH}")
+endif()
+
 execute_process(
     COMMAND git log -1 --format=%h
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -31,20 +36,30 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wdangling-else -Wconversion -Wpedantic")
-if(NOT SLOTH_TEST_REPORT)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-endif()
-if(SLOTH_PROFILING)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
-endif()
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+if(WIN32)
+    # if(NOT SLOTH_TEST_REPORT)
+    #     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -WX")
+    # endif()
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -Wdangling-else -Wconversion -Wpedantic")
+    if(NOT SLOTH_TEST_REPORT)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+    endif()
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=undefined")
-set(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=undefined")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=undefined")
+    set(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=undefined")
+
+    if(SLOTH_PROFILING)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pg")
+    endif()
+
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+endif()
+
 
 # TODO WSL issue with stack overflow in D3D12GetInterface from libd3d12.so
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
@@ -83,6 +98,7 @@ if(DEFINED QT_DIR)
 endif()
 
 if(USE_EXTERNAL_QT)
+    # Prebuild Qt https://github.com/martinrotter/qt-minimalistic-builds/releases
     message(NOTICE "Using Qt from ${QT_DIR}. To use conan version undef QT_DIR variable")
     file(REMOVE "${CMAKE_BINARY_DIR}/FindQt5.cmake")
     set(CMAKE_PREFIX_PATH "${CMAKE_PREFIX_PATH};${QT_DIR}/lib/cmake/Qt5/")
@@ -101,7 +117,7 @@ else()
 endif()
 
 set(CONAN_fmt fmt/10.1.0)
-if (UNIX)
+if (NOT WIN32)
     set(CONAN_OPTIONS_fmt fmt:fPIC=True)
 endif()
 

@@ -39,7 +39,7 @@ Args parseArgs(const QApplication& app)
     // --- Log level ---
     QString description      = "Set application log level: ";
     const auto logLevelNames = sloth::util::enum_names<LogLevel>();
-    for (const auto* name = logLevelNames.begin(); name != std::prev(logLevelNames.end()); name = std::next(name)) {
+    for (auto name = logLevelNames.begin(); name != std::prev(logLevelNames.end()); name = std::next(name)) {
         description.append(fmt::format("{}={}, ", *name, std::distance(logLevelNames.begin(), name)).data());
     }
     description.chop(2);
@@ -62,7 +62,11 @@ void sighandler(int signum)
     switch (signum) {
     case SIGTERM:
     case SIGINT:
+#ifdef WIN32
+        LOG(L_INFO, "Closing the app by signal {}", signum);
+#else
         LOG(L_INFO, "Closing the app by signal {}", strsignal(signum));  // NOLINT(concurrency-mt-unsafe)
+#endif
         QApplication::quit();
     }
 }
@@ -101,7 +105,7 @@ struct QtResources
     QtResources(const QtResources&)  = delete;
     QtResources(const QtResources&&) = delete;
 
-    void operator=(const QtResources&) = delete;
+    void operator=(const QtResources&)  = delete;
     void operator=(const QtResources&&) = delete;
 };
 static const QtResources resources;
